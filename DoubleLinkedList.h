@@ -22,7 +22,7 @@ public:
 
 	int GetCount() { return count; }//O(1)
 
-	// Добавление в конец списка
+	// Р”РѕР±Р°РІР»РµРЅРёРµ РІ РєРѕРЅРµС† СЃРїРёСЃРєР°
 	void AddTail(int n) {//O(1)
 		Node *temp = new Node;
 		temp->next = 0;
@@ -36,7 +36,7 @@ public:
 		count++;
 	}
 
-	// Добавление в начало списка
+	// Р”РѕР±Р°РІР»РµРЅРёРµ РІ РЅР°С‡Р°Р»Рѕ СЃРїРёСЃРєР°
 	void AddHead(int n) {//O(1)
 		Node *temp = new Node;
 		temp->prev = 0;
@@ -49,11 +49,11 @@ public:
 
 		count++;
 	}
-	//Добавление по индексу 
-	void AddByIndex(int pos,int num) {
+	//Р”РѕР±Р°РІР»РµРЅРёРµ РїРѕ РёРЅРґРµРєСЃСѓ 
+	void AddByIndex(int pos,int num) {// O(n) С‚Р°Рє РєР°Рє СЌС‚Рѕ СЃР°РјС‹Р№ С…СѓРґС€РёР№ РІР°СЂРёР°РЅС‚ 
 		Node *temp = new Node;
 		if (pos > 0) {
-			if (pos == 1) {//Если голова
+			if (pos == 1) {//Р•СЃР»Рё РіРѕР»РѕРІР° O(1)
 
 				temp->prev = 0;
 				temp->next = head;
@@ -67,7 +67,7 @@ public:
 				return;
 
 			}
-			else if (pos > count) {//Если хвост
+			else if (pos > count) {//Р•СЃР»Рё С…РІРѕСЃС‚ O(1)
 				temp->next = 0;
 				temp->prev = tail;
 				temp->num = num;
@@ -78,21 +78,21 @@ public:
 				count++;
 				return;
 			}
-			else {//Если тело
+			else {//Р•СЃР»Рё С‚РµР»Рѕ O(n)
 
 				Node *temp = head;
 				int i = pos;
-				while (i-- > 1) temp = temp->next;
+				while (i-- > 1) temp = temp->next; // O(n)
 
 				Node *newNode = new Node;
 				newNode->num = num;
 				newNode->next = temp;
-				newNode->prev = temp->prev;
+				newNode->prev = temp->prev;							// O(n+n)=O(2n)=O(n)
 				temp->prev = newNode;
 				newNode->prev->next = newNode;
 
 				int j = pos;
-				while (j-- > 1) newNode = newNode->prev;
+				while (j-- > 1) newNode = newNode->prev;// O(n)
 
 				head = newNode;
 
@@ -117,11 +117,11 @@ public:
 
 		Node *prevDel = del->prev;
 		Node *afterDel = del->next;
-		//Удаляем эллемент из списка если это не голова и не хвост, даем ему значение соседей.
-		if (prevDel != 0 && count != 1) prevDel->next = afterDel;//Если удаляем не голову
-		if (afterDel != 0 && count != 1)afterDel->prev = prevDel; //Если удаляем не хвост
+		//РЈРґР°Р»СЏРµРј СЌР»Р»РµРјРµРЅС‚ РёР· СЃРїРёСЃРєР° РµСЃР»Рё СЌС‚Рѕ РЅРµ РіРѕР»РѕРІР° Рё РЅРµ С…РІРѕСЃС‚, РґР°РµРј РµРјСѓ Р·РЅР°С‡РµРЅРёРµ СЃРѕСЃРµРґРµР№.
+		if (prevDel != 0 && count != 1) prevDel->next = afterDel;//Р•СЃР»Рё СѓРґР°Р»СЏРµРј РЅРµ РіРѕР»РѕРІСѓ
+		if (afterDel != 0 && count != 1)afterDel->prev = prevDel; //Р•СЃР»Рё СѓРґР°Р»СЏРµРј РЅРµ С…РІРѕСЃС‚
 	}
-	//Поиск по числу
+	//РџРѕРёСЃРє РїРѕ С‡РёСЃР»Сѓ
 	bool Contains(int soughtFor) {
 		Node *temp = head;
 		for (; temp != 0; temp = temp->next) {
@@ -129,7 +129,7 @@ public:
 		}
 		return false;
 	}
-	//Поиск по индексу
+	//РџРѕРёСЃРє РїРѕ РёРЅРґРµРєСЃСѓ
 	int Get(int pos) {
 		Node *temp = head;
 		int i = 1;
@@ -141,9 +141,9 @@ public:
 		return temp->num;
 	}
 
-	// Вывод списка
+	// Р’С‹РІРѕРґ СЃРїРёСЃРєР°
 	void Print() { // O(n)
-		//Проверяем есть ли элементы в списке
+		//РџСЂРѕРІРµСЂСЏРµРј РµСЃС‚СЊ Р»Рё СЌР»РµРјРµРЅС‚С‹ РІ СЃРїРёСЃРєРµ
 		if (count != 0) {
 			Node *temp = head;
 			std::cout << "( ";
@@ -155,9 +155,9 @@ public:
 		}
 	}
 	
-	// Вывод определенного элемента
+	// Р’С‹РІРѕРґ РѕРїСЂРµРґРµР»РµРЅРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°
 	void Print(int pos) { // O(n)
-		//Допустима ли позиция
+		//Р”РѕРїСѓСЃС‚РёРјР° Р»Рё РїРѕР·РёС†РёСЏ
 		if (pos < 1 || pos>count) {
 			std::cout << "incorect position!";
 			return;
@@ -197,10 +197,10 @@ public:
 	}
 
 
-	//O(n * m + n) // Мне кажется, что это 
+	//O(n * m + n) // РњРЅРµ РєР°Р¶РµС‚СЃСЏ, С‡С‚Рѕ СЌС‚Рѕ 
 	or
-	//O(n * m + n * n) = O(n * m + n^2) // такое себе
+	//O(n * m + n * n) = O(n * m + n^2) // С‚Р°РєРѕРµ СЃРµР±Рµ
 	or
-	//O(n*m + n*m + n)=O(2nm + n)=O(nm + n)//херня
+	//O(n*m + n*m + n)=O(2nm + n)=O(nm + n)//С…РµСЂРЅСЏ
 
 }*/
