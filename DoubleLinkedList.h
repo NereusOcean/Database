@@ -49,48 +49,58 @@ public:
 
 		count++;
 	}
-
+	//Добавление по индексу 
 	void AddByIndex(int pos,int num) {
 		Node *temp = new Node;
+		if (pos > 0) {
+			if (pos == 1) {//Если голова
 
-		if (pos == 1) {
+				temp->prev = 0;
+				temp->next = head;
+				temp->num = num;
 
-			temp->prev = 0;
-			temp->next = head;
-			temp->num = num;
+				if (head != 0)head->prev = temp;
+				if (count == 0)head = tail = temp;
+				else head = temp;
 
-			if (head != 0)head->prev = temp;
-			if (count == 0)head = tail = temp;
-			else head = temp;
+				count++;
+				return;
 
-			count++;
-			return;
+			}
+			else if (pos > count) {//Если хвост
+				temp->next = 0;
+				temp->prev = tail;
+				temp->num = num;
+				if (tail != 0)tail->next = temp;
+				if (count == 0)head = tail = temp;
+				else tail = temp;
 
-		} 
-		else if (pos == count) {
-			temp->next = 0;
-			temp->prev = tail;
-			temp->num = num;
-			if (tail != 0)tail->next = temp;
-			if (count == 0)head = tail = temp;
-			else tail = temp;
+				count++;
+				return;
+			}
+			else {//Если тело
 
-			count++;
+				Node *temp = head;
+				int i = pos;
+				while (i-- > 1) temp = temp->next;
+
+				Node *newNode = new Node;
+				newNode->num = num;
+				newNode->next = temp;
+				newNode->prev = temp->prev;
+				temp->prev = newNode;
+				newNode->prev->next = newNode;
+
+				int j = pos;
+				while (j-- > 1) newNode = newNode->prev;
+
+				head = newNode;
+
+				count++;
+			}
 			return;
 		}
-		else {
-			Node *newNode = head;
-			for (int i = 1; i < pos; ++i) newNode = newNode->next;
-			
-			Node *newN = new Node;
-			newN->next = newNode;
-			newN->prev = newNode->prev;
-			newN->num = num;
-			
-			tail = newN;
-
-			count++;
-		}
+		
 	}
 
 	void Del(int pos) {//O(n)
