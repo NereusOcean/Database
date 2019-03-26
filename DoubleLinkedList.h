@@ -15,7 +15,7 @@ class List {
 public:
 
 	List() {
-		head = tail = NULL;
+		head = tail = nullptr;
 		
 		count = 0;
 	}
@@ -25,25 +25,25 @@ public:
 	// Добавление в конец списка
 	void AddTail(int n) {//O(1)
 		Node *temp = new Node;
-		temp->next = 0;
+		temp->next = nullptr;
 		temp->num = n;
 		temp->prev = tail;
 
-		if (tail != 0)tail->next = temp;
+		if (tail != nullptr)tail->next = temp;
 		if (count == 0)head = tail = temp;
 		else tail = temp;
-
+		
 		count++;
 	}
 
 	// Добавление в начало списка
 	void AddHead(int n) {//O(1)
 		Node *temp = new Node;
-		temp->prev = 0;
+		temp->prev = nullptr;
 		temp->num = n;
 		temp->next = head;
 
-		if (head != 0)head->prev = temp;
+		if (head != nullptr)head->prev = temp;
 		if (count == 0)head = tail = temp;
 		else head = temp;
 
@@ -52,102 +52,116 @@ public:
 	//Добавление по индексу 
 	void AddByIndex(int pos,int num) {// O(n) так как это самый худший вариант 
 		Node *temp = new Node;
-		if (pos > 0) {
-			if (pos == 1) {//Если голова O(1)
+		if (pos >= 0) {
+				if (pos < count / 2) {
+					Node *temp = head;
+					int i = 0;
+					while (i++ < pos)temp = temp->next;
+					Node *newNode = new Node;
+					newNode->num = num;
+					newNode->next = temp;
+					newNode->prev = temp->prev;							// O(n+n)=O(2n)=O(n)
+					temp->prev = newNode;
+					
+					if (pos == 0) AddHead(num);
+					else newNode->prev->next = newNode;
 
-				temp->prev = 0;
-				temp->next = head;
-				temp->num = num;
+					count++;
+				}
+				else {
 
-				if (head != 0)head->prev = temp;
-				if (count == 0)head = tail = temp;
-				else head = temp;
+					Node *temp = tail;
 
-				count++;
-				return;
+					int i = count;
+					while (--i > pos)temp = temp->prev;
 
-			}
-			else if (pos > count) {//Если хвост O(1)
-				temp->next = 0;
-				temp->prev = tail;
-				temp->num = num;
-				if (tail != 0)tail->next = temp;
-				if (count == 0)head = tail = temp;
-				else tail = temp;
+					Node *newNode = new Node;
+					if (pos == count) AddTail(num);
+					else {
+						newNode->next = temp;
+						newNode->num = num;
+						newNode->prev = temp->prev;
+						temp->prev = newNode;
+						newNode->prev->next = newNode;
+						count++;
+					}
+					
 
-				count++;
-				return;
-			}
-			else {//Если тело O(n)
-
-				Node *temp = head;
-				int i = pos;
-				while (i-- > 1) temp = temp->next; // O(n)
-
-				Node *newNode = new Node;
-				newNode->num = num;
-				newNode->next = temp;
-				newNode->prev = temp->prev;							// O(n+n)=O(2n)=O(n)
-				temp->prev = newNode;
-				newNode->prev->next = newNode;
-
-				int j = pos;
-				while (j-- > 1) newNode = newNode->prev;// O(n)
-
-				head = newNode;
-
-				count++;
-			}
-			return;
+				}
 		}
-		
 	}
 
 	void Del(int pos) {//O(n)
-		if (pos == 0) return;
-		if (pos<0 || pos>count) {
+		
+		if (pos<0 || pos>count-1) {
 			std::cout << "incorect position!\n";
 			return;
 		}
 
+		if (pos == 0) {
+			Node *del = head;
+			del->next->prev = nullptr;
+			head = del->next;
+		}
+		else {
+			Node *del = head;
+
+			for (int i = 0; i < pos; ++i) del = del->next;
+
+			Node *prevDel = del->prev;
+			Node *afterDel = del->next;
+			//Удаляем эллемент из списка если это не голова и не хвост, даем ему значение соседей.
+			if (prevDel != 0 && count != 1) prevDel->next = afterDel;//Если удаляем не голову
+			if (afterDel != 0 && count != 1)afterDel->prev = prevDel; //Если удаляем не хвост
+			count--;
+		}
 		
-		Node *del = head;
-
-		for (int i = 1; i < pos; ++i) del = del->next;
-
-		Node *prevDel = del->prev;
-		Node *afterDel = del->next;
-		//Удаляем эллемент из списка если это не голова и не хвост, даем ему значение соседей.
-		if (prevDel != 0 && count != 1) prevDel->next = afterDel;//Если удаляем не голову
-		if (afterDel != 0 && count != 1)afterDel->prev = prevDel; //Если удаляем не хвост
 	}
 	//Поиск по числу
 	bool Contains(int soughtFor) {
 		Node *temp = head;
-		for (; temp != 0; temp = temp->next) {
+		for (; temp != nullptr; temp = temp->next) {
 			if (temp->num == soughtFor) return true;
 		}
 		return false;
 	}
 	//Поиск по индексу
 	int Get(int pos) {
-		Node *temp = head;
-		int i = 1;
-		while (i < pos)
-		{
-			temp = temp->next;
-			++i;
+		
+		
+		if (pos < count / 2) {
+			Node *temp = head;
+			int i = 0;
+			while (i++ < pos)temp = temp->next;
+			return temp->num;
 		}
-		return temp->num;
-	}
+		else {
+			Node *temp =tail;
+			int i = count;
+			while (i-- > pos)temp = temp->prev;
+			return temp->num;
 
+		}
+		
+	}
+	//Поиск числа и вдача его позиции 
+	int PosThisNum(int soughtFor) {
+		Node *temp = head;
+		int pos = 0;
+		for (; temp != nullptr; temp = temp->next) {
+			
+			if (temp->num == soughtFor) return pos;
+			pos++;
+		}
+		return false;
+	}
 	// Вывод списка
 	void Print() { // O(n)
 		//Проверяем есть ли элементы в списке
 		if (count != 0) {
 			Node *temp = head;
 			std::cout << "( ";
-			while (temp->next != 0) {
+			while (temp->next != nullptr) {
 				std::cout << temp->num << ", ";
 				temp = temp->next;
 			}
