@@ -101,17 +101,22 @@ public:
 	}
 
 	//Пересечение 2 списков
-	List Intersect(List head, List head1){
+	List Intersect(List list, List list2) {
 		try
 		{
-			if (head.GetCount() == 0 || head1.GetCount() == 0) {
+			if (list.GetCount() == 0 || list2.GetCount() == 0) {
+				int c;
 				throw std::length_error{ "List is EMPTY!" };
 			}
+
 			List headResult;
-			for (int i = 0; i < head.count; ++i) {
-				for (int j = 0; j < head1.count; ++j) {
-					if (head.Get(i) == head1.Get(j)) {
-						headResult.AddTail(head.Get(i));
+			List temp = list2;
+
+			for (; list.head != nullptr; list.head = list.head->next) {
+				list2.head = temp.head;
+				for (; list2.head != nullptr; list2.head = list2.head->next) {
+					if (list.head->num == list2.head->num) {
+						headResult.AddTail(list.head->num);
 					}
 				}
 			}
@@ -121,8 +126,8 @@ public:
 		{
 			std::cerr << "Eror 103 " << ex.what();
 		}
-		
 	}
+
 
 	void Del(int pos) {//O(n)
 		try
