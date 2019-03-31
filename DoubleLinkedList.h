@@ -108,10 +108,10 @@ public:
 				throw std::length_error{ "List is EMPTY!" };
 			}
 			List headResult;
-			for (int i = 0; i < head.count; i++) {
-				for (int j = 0; j < head1.count; j++) {
+			for (int i = 0; i < head.count; ++i) {
+				for (int j = 0; j < head1.count; ++j) {
 					if (head.Get(i) == head1.Get(j)) {
-						headResult.AddTail(head1.Get(j));
+						headResult.AddTail(head.Get(i));
 					}
 				}
 			}
