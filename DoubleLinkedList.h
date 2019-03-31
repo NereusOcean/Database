@@ -110,15 +110,9 @@ public:
 			}
 
 			List headResult;
-			List temp = list2;
-
+			
 			for (; list.head != nullptr; list.head = list.head->next) {
-				list2.head = temp.head;
-				for (; list2.head != nullptr; list2.head = list2.head->next) {
-					if (list.head->num == list2.head->num) {
-						headResult.AddTail(list.head->num);
-					}
-				}
+				if (list2.Contains(list.head->num)) headResult.AddTail(list.head->num);
 			}
 			return headResult;
 		}
