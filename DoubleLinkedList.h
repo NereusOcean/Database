@@ -102,24 +102,13 @@ public:
 
 	//Пересечение 2 списков
 	List Intersect(List list, List list2) {
-		try
-		{
-			if (list.GetCount() == 0 || list2.GetCount() == 0) {
-				int c;
-				throw std::length_error{ "List is EMPTY!" };
-			}
-
 			List headResult;
-			
-			for (; list.head != nullptr; list.head = list.head->next) {
-				if (list2.Contains(list.head->num)) headResult.AddTail(list.head->num);
+			Node *temp = list.head;
+
+			for (; temp != nullptr; temp = temp->next) {
+				if (list2.Contains(temp->num)) headResult.AddTail(temp->num);
 			}
 			return headResult;
-		}
-		catch (const std::exception&ex)
-		{
-			std::cerr << "Eror 103 " << ex.what();
-		}
 	}
 
 
@@ -203,11 +192,6 @@ public:
 	// Вывод списка
 	void Print() { // O(n)
 		//Проверяем есть ли элементы в списке
-		try
-		{
-			if (count == 0) {
-				throw std::length_error{ "List is EMPTY!" };
-			}
 			Node *temp = head;
 			std::cout << "( ";
 			while (temp->next != nullptr) {
@@ -215,12 +199,6 @@ public:
 				temp = temp->next;
 			}
 			std::cout << temp->num << " )\n";
-		}
-		catch (const std::exception &ex)
-		{
-			std::cerr << "Eror 103 " << ex.what();
-		}
-		
 	}
 	
 	// Вывод определенного элемента
